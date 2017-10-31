@@ -15,10 +15,6 @@ std::string MyRobot_vrepHW::sm_jointsName[MR_JOINTS_NUM] = {
     "back_left_wheel_joint",
     "back_right_wheel_joint",
     "front_right_wheel_joint"*/
-	"gripper_prismatic_right_joint",
-	"gripper_prismatic_left_joint",
-	"gripper_revolute_right_joint",
-	"gripper_revolute_left_joint",
 	"joint_a1",
 	"joint_a2",
 	"joint_a3",

@@ -2,16 +2,12 @@
 #include "vrepRosControl_plugin.h"
 #include "vrepRosControl_server.h"
 
+#include "ros/ros.h"
 #include <iostream>
-
-#include <urdf/model.h>
-
 
 #define PLUGIN_VERSION 1
 
 std::string vrepRosControl_pluginName = "vrepRosControl";
-
-std::string robot_description_ = "robot_description"; //change the name of the parameter if it's needed
 
 LIBRARY vrepLib; // the V-REP library that we will dynamically load and bind
 
@@ -19,7 +15,6 @@ LIBRARY vrepLib; // the V-REP library that we will dynamically load and bind
 // This is the plugin start routine (called just once, just after the plugin was loaded):
 VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
 {
-	
 	// Dynamically load and bind V-REP functions:
 	// ******************************************
 	// 1. Figure out this plugin's directory:
@@ -66,62 +61,6 @@ VREP_DLLEXPORT unsigned char v_repStart(void* reservedPointer,int reservedInt)
         std::cout << "ROS master is not running. Cannot start '" << vrepRosControl_pluginName << "' plugin.\n";
 		return (0); //If the master is not running then the plugin is not loaded.
 	}
-	
-	// ********************
-	
-	// Read urdf from robot_description param
-	// ********************
-	// Get parameters/settings for controllers from ROS param server
-	//model_nh_ = ros::NodeHandle("");
-	//const std::string urdf_string = getURDF(robot_description_);
-	ros::NodeHandle model_nh_ = ros::NodeHandle("");
-	const std::string urdf_string = getURDF(robot_description_, model_nh_);
-	
-	/*if (!parseTransmissionsFromURDF(urdf_string))
-  {
-    ROS_ERROR_NAMED("vrep_ros_control", "Error parsing URDF in vrep_ros_control plugin, plugin not active.\n");
-    return (0);
-  }
-
-  // Load the RobotHWSim abstraction to interface the controllers with the gazebo model
-  try
-  {
-    robot_hw_sim_loader_.reset
-      (new pluginlib::ClassLoader<gazebo_ros_control::RobotHWSim>
-        ("gazebo_ros_control",
-          "gazebo_ros_control::RobotHWSim"));
-
-    robot_hw_sim_ = robot_hw_sim_loader_->createInstance(robot_hw_sim_type_str_);
-    urdf::Model urdf_model;
-    const urdf::Model *const urdf_model_ptr = urdf_model.initString(urdf_string) ? &urdf_model : NULL;
-
-    if(!robot_hw_sim_->initSim(robot_namespace_, model_nh_, parent_model_, urdf_model_ptr, transmissions_))
-    {
-      ROS_FATAL_NAMED("gazebo_ros_control","Could not initialize robot simulation interface");
-      return;
-    }
-
-    // Create the controller manager
-    ROS_DEBUG_STREAM_NAMED("ros_control_plugin","Loading controller_manager");
-    controller_manager_.reset
-      (new controller_manager::ControllerManager(robot_hw_sim_.get(), model_nh_));
-
-    // Listen to the update event. This event is broadcast every simulation iteration.
-    update_connection_ =
-      gazebo::event::Events::ConnectWorldUpdateBegin
-      (boost::bind(&GazeboRosControlPlugin::Update, this));
-
-  }
-  catch(pluginlib::LibraryLoadException &ex)
-  {
-    ROS_FATAL_STREAM_NAMED("gazebo_ros_control","Failed to create robot simulation interface loader: "<<ex.what());
-  }
-
-  ROS_INFO_NAMED("gazebo_ros_control", "Loaded gazebo_ros_control.");*/
-	
-	
-	
-	
 
 	return(PLUGIN_VERSION); // initialization went fine, we return the version number of this plugin (can be queried with simGetModuleName)
 }
@@ -184,40 +123,3 @@ VREP_DLLEXPORT void* v_repMessage(int message,int* auxiliaryData,void* customDat
 	return(retVal);
 }
 
-// Get the URDF XML from the parameter server
-std::string getURDF(std::string param_name, ros::NodeHandle model_nh_)
-{
-  std::string urdf_string;
-
-  // search and wait for robot_description on param server
-  while (urdf_string.empty())
-  {
-    std::string search_param_name;
-    if (model_nh_.searchParam(param_name, search_param_name))
-    {
-      ROS_INFO_ONCE_NAMED("vrep_ros_control", "vrep_ros_control plugin is waiting for model"
-        " URDF in parameter [%s] on the ROS param server.", search_param_name.c_str());
-
-      model_nh_.getParam(search_param_name, urdf_string);
-    }
-    else
-    {
-      ROS_INFO_ONCE_NAMED("vrep_ros_control", "vrep_ros_control plugin is waiting for model"
-        " URDF in parameter [%s] on the ROS param server.", robot_description_.c_str());
-
-      model_nh_.getParam(param_name, urdf_string);
-    }
-
-    usleep(100000);
-  }
-  ROS_DEBUG_STREAM_NAMED("vrep_ros_control", "Recieved urdf from param server, parsing...");
-
-  return urdf_string;
-}
-
-// Get Transmissions from the URDF
-bool parseTransmissionsFromURDF(const std::string& urdf_string)
-{
-  transmission_interface::TransmissionParser::parse(urdf_string, transmissions_);
-  return true;
-}

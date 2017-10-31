@@ -13,6 +13,7 @@ set(${PROJECT_NAME}_headers
     src/ControlLoop/vrepRosControl_server.h
     src/ControlLoop/vrepRosControl_plugin.h
     src/ControlLoop/MyRobot_vrepHW.h
+    #src/ControlLoop/Default_vrepHW.h
 )
 
 set(${PROJECT_NAME}_sources
@@ -20,6 +21,7 @@ set(${PROJECT_NAME}_sources
     src/ControlLoop/vrepRosControl_server.cpp
     src/ControlLoop/vrepRosControl_plugin.cpp
     src/ControlLoop/MyRobot_vrepHW.cpp
+    #src/ControlLoop/Default_vrepHW.cpp
 )
 
 catkin_package(
@@ -28,7 +30,7 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-link_directories("/opt/ros/indigo/lib")
+link_directories("/opt/ros/kinetic/lib")
 
 add_library(v_repExtRosControl ${${PROJECT_NAME}_headers} ${${PROJECT_NAME}_sources})
 

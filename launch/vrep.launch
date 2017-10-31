@@ -12,6 +12,7 @@
   <!-- Start controllers -->
   <rosparam file="$(find vrep_ros_control_example)/control/mr_controller.yaml" command="load"/> <!-- Joint trajectory controller (this is not a low-level controller) -->
 
-  <node name="controller_manager_spawner" pkg="controller_manager" type="spawner" args="mr_controller" />
+  <node name="controller_manager_spawner" pkg="controller_manager" type="spawner" args="front_velocity_controller" />
+  <node name="controller_manager_spawner2" pkg="controller_manager" type="spawner" args="joint_state_controller" />
 
 </launch>

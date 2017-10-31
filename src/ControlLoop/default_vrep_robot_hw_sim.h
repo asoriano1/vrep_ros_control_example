@@ -4,6 +4,23 @@
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
 
+// ros_control
+#include <control_toolbox/pid.h>
+#include <hardware_interface/joint_command_interface.h>
+#include <hardware_interface/robot_hw.h>
+#include <joint_limits_interface/joint_limits.h>
+#include <joint_limits_interface/joint_limits_interface.h>
+#include <joint_limits_interface/joint_limits_rosparam.h>
+#include <joint_limits_interface/joint_limits_urdf.h>
+
+// ROS
+#include <ros/ros.h>
+#include <angles/angles.h>
+#include <pluginlib/class_list_macros.h>
+
+// URDF
+#include <urdf/model.h>
+
 
 namespace MR
 {
@@ -11,14 +28,10 @@ namespace MR
 
 enum MrJointsEnum
 {
-	GRIPPER_PRISMATIC_RIGHT_JOINT = 0,
-	GRIPPER_PRISMATIC_LEFT_JOINT,
-	GRIPPER_REVOLUTE_RIGHT_JOINT,
-	GRIPPER_REVOLUTE_LEFT_JOINT,   
-    JOINT_1, 
-    JOINT_2, 
-    JOINT_3, 
-    JOINT_4,
+    FRONT_LEFT_WHEEL_JOINT = 0,
+    BACK_LEFT_WHEEL_JOINT,
+    BACK_RIGHT_WHEEL_JOINT,
+    FRONT_RIGHT_WHEEL_JOINT,
     JOINT_5,
     JOINT_6,
 

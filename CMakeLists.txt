@@ -28,7 +28,7 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-link_directories("/opt/ros/indigo/lib")
+link_directories("/opt/ros/kinetic/lib")
 
 add_library(v_repExtRosControl ${${PROJECT_NAME}_headers} ${${PROJECT_NAME}_sources})
 
